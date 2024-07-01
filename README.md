@@ -32,14 +32,14 @@ Para instalar o 'pip':
   6. Digite o comando `python -m ensurepip` e pressione `Enter` e aguarde a instalação do pacote `pip` e suas dependências.
      Mantenha o prompt de comando aberto para a instalação dos módulos, conforme os passos a seguir.
 
-- Instalando os módulos
+#### Instalando os módulos
   Com o `pip` instalado e o prompt de comando ainda aberto, podemos utilizá-lo para baixar os demais módulos necessários.
   1. NumPy: `pip -m pip install numpy`
   2. Astropy: `python -m pip install "astropy[all]"`
  
   Depois que os módulos forem baixados e instalados com sucesso, feche o prompt de comando.
 
-- Instalando o Add-on no Blender
+#### Instalando o Add-on no Blender
   1. Baixe o arquivo `posLua.zip`.
   2. Abra o Blender.
   3. No menu superior, vá em `Edit` > `Preferences` > `Add-ons`.
