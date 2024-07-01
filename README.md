@@ -139,8 +139,12 @@ def limpar_cena():
 ```
 Para não sobrepor as cenas com objetos repetidos a cada iteração com o botão `Criar cena`, é configurada uma função que limpa todas as informações da cena atual. Essa função será chama sempre que uma nova cena é criada, antes de qualquer outra função.
 
-
-
+### Operadores
+De acordo com a [documentação do Blender]([https://developer.blender.org/docs/](https://developer.blender.org/docs/features/interface/operators/)), operadores são classes que executam funções com funcionalidades adicionais e configurações de entrada. Se um atalho ou botão for pressionado, geralmente isso chama um operador. Por convenção: `CATEGORIA_OT_nome`.
+Para esse script, foram utulizados três operadores:
+- `MESH_OT_criar_lua` para criar a representação da Lua e posicioná-la em uma nova cena.
+- `RENDER_OT_hdri` para atribuir uma imagem HDR importada ao ambiente.
+- `VIEW_OT_toggle_grid` para alternar a vizibilidade do grid.
 
 
 
