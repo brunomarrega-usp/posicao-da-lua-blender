@@ -2,7 +2,7 @@ bl_info = {
     "name": "Posição da Lua",
     "author": "Bruno Marrega, Gabriela Bezerra, Kevin Akihito, Samara Amorin",
     "version": (0, 0, 1),
-    "blender": (2, 80, 0),
+    "blender": (4, 1, 1),
     "location": "3D Viewport > Sidebar > Posição da Lua",
     "description": "Simulador da posição da Lua",
     "category": "Simulation",
