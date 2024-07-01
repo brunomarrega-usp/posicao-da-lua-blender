@@ -100,10 +100,7 @@ class MESH_OT_criar_lua(bpy.types.Operator):    # Convençao de nome: CATEGORIA_
         tempo = self.str_tempo
         cidade = self.str_local
         
-        print(tempo,cidade)
-        
         x, y, z = coordCartesianas_lua(cidade, tempo)
-        
         
         # Cria uma esfera e atribui um nome a ela
         bpy.ops.mesh.primitive_ico_sphere_add(enter_editmode=False, align='WORLD', location=(x, y, x), scale=(20, 20, 20))
