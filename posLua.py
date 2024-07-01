@@ -1,6 +1,6 @@
 bl_info = {
     "name": "Posição da Lua",
-    "author": "Bruno Marrega, Gabriela Bezerra, Kevin Akihito, Samara Amorin",
+    "author": "Bruno Marrega, Gabriela Bezerra, Kevin Akihito, Samara Amorim",
     "version": (0, 0, 1),
     "blender": (4, 1, 1),
     "location": "3D Viewport > Sidebar > Posição da Lua",
