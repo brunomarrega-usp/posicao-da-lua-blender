@@ -4,7 +4,7 @@ O posLua é um add-on desenvolvido para o Blender, com o intuito de visualizar a
 ## Instalação
 ### Requisitos
 - Blender (4.1.1)
-- Python (3,11,7)
+- Python (3.11.7)
 
 ### Pacotes e módulos
 - [Blender Python API](https://docs.blender.org/api/current/index.html)
