@@ -81,7 +81,6 @@ class MESH_OT_criar_lua(bpy.types.Operator):    # Convençao de nome: CATEGORIA_
     bl_label = "Defina o local e o momento, conforme os formatos indicados:"
     
     # Inputs de texto para o dialog box
-                            ################## Verificar a validade das strings!
     str_tempo: bpy.props.StringProperty(name="Tempo:", default="2024-01-30 01:05")
     str_local: bpy.props.StringProperty(name="Local:", default="Lorena, São Paulo, Brazil")
     
