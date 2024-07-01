@@ -12,9 +12,8 @@ O posLua é um add-on desenvolvido para o Blender, com o intuito de visualizar a
 - [NumPy](https://numpy.org/)
 - [Astropy](https://www.astropy.org/)
 
-### Passo a passo
-- Instalando o 'pip'
-O ambiente Python do Blender não vem com o 'pip' instalado por padrão, esse pacote permite a instalação dos módulos que precisamos para calcular os dados astronômicos.
+#### Passo a passo
+- Instalando o `pip`: O ambiente Python do Blender não vem com o `pip` instalado por padrão, esse pacote permite a instalação dos módulos que precisamos para calcular os dados astronômicos.
 Para instalar o 'pip':
   1. Encontre o caminho da pasta onde está o .exe do Python dentro da pasta de instalação do Blender.
      Para o Windows, utilizando o Blender 4.1, o caminho para a pasta é:
