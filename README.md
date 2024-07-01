@@ -59,10 +59,85 @@ Através desse painel é possível:
 - Controlar a intensidade de iluminação gerada pela imagem HDR;
 - Ativar e desativar a visualização do grid, eixos e cursor 3D do Blender, para uma simulação mais limpa.
 
+### Criando uma nova simulação
+No Viewport, abra a barra lateral pressionando `n` e entre na aba `Posição da Lua` e proceda conforme a ordem dos passos descritos no painel.
+- Passo 1: Criar cena
+  1. Uma janela pop-up surgirá pedindo que sejam fornecidos o tempo e o local
+  2. A cena é criada, com a representação da Lua posicionada conforme as coordenadas calculadas.
+- Passo 2: Importar HDR
+  1. Uma janela surgirá para importar uma imagem ([HDRi](https://christianezhao.medium.com/everything-you-need-to-know-about-an-hdr-panorama-image-ee5953073b6a)) que será usada de fundo
+  2. Através do slider à direita, controla-se a intensidade da iluminação proveniente da imagem
+- Ver grid: chackbox que controla a exibição da malha, eixos e cursor 3D
 
+> [!NOTE]
+> Sempre que uma nova cena é criada, o espaço é resetado.
 
+## Como tudo funciona
+Para funcionar como um add-on dentro do Blender, a notação empregada foi a tradicionalmente utilizada para as classes de operadores e paineis, como é indicado na documentação do módulo `bpy`. O bloco inicial contém informações para registro do script, a versão mínima do Blender, autores e outras informações do add-on:
+```
+bl_info = {
+    "name": "Posição da Lua",
+    "author": "Bruno Marrega, Gabriela Bezerra, Kevin Akihito, Samara Amorin",
+    "version": (0, 0, 1),
+    "blender": (4, 1, 1),
+    "location": "3D Viewport > Sidebar > Posição da Lua",
+    "description": "Simulador da posição da Lua",
+    "category": "Simulation",
+}
+```
+### Coordenadas cartesianas
+```
+def coordCartesianas_lua(cidade, tempo):
+    # Localização do observador
+    loc = apc.EarthLocation.of_address(cidade)
 
+    # Tempo da observação
+    t = apt.Time(tempo)
+              
+    # AltAz frame (altitude e azimute) para o local e tempo definidos
+    altaz_frame = apc.AltAz(obstime=t, location=loc)
 
+    # Altitude e azimute da Lua
+    altaz_lua = apc.get_body('moon', t, loc).transform_to(altaz_frame)
+              
+    # Altitude (alt) é o ângulo de elevação a partir do horizonte
+    # Azimute (az) é o ângulo medido em sentido horário a partir do norte
+    alt = altaz_lua.alt.rad
+    az = altaz_lua.az.rad
+
+    # Converter coordenadas esféricas (alt, az) para coordenadas cartesianas (x, y, z)
+    x = np.cos(alt) * np.cos(az) * 1000
+    y = np.cos(alt) * np.sin(az) * 1000
+    z = np.sin(alt) * 1000
+         
+    return x, y, z
+```
+A função consulta a altitude e azimute através do módulo Astropy, e converte essas coordenadas para cartesianas, retornando o `x`, `y` e `z` para a Lua, para aquele momento, naquele lugar. Essa função será utilizada posteriormente dentro da classe que opera a função do botão `Criar cena`.
+
+### Limpar cena
+```
+def limpar_cena():
+    """Limpa todos os objetos e materiais da cena"""
+    
+    # Deleta todos os objetos dentro da cena
+    bpy.ops.object.select_all(action='DESELECT')
+    bpy.ops.object.select_all(action='SELECT')
+    bpy.ops.object.delete()
+    
+    # Acessa e deleta todos os materiais
+    for material in bpy.data.materials:
+        material.user_clear()
+        bpy.data.materials.remove(material)
+    
+    # Cria um novo mundo, caso nao exista
+    if not bpy.data.worlds:
+        bpy.data.worlds.new("World")
+    world = bpy.data.worlds[0]
+        
+    # Limpa todos os nodes existentes
+    world.node_tree.nodes.clear()
+```
+Para não sobrepor as cenas com objetos repetidos a cada iteração com o botão `Criar cena`, é configurada uma função que limpa todas as informações da cena atual. Essa função será chama sempre que uma nova cena é criada, antes de qualquer outra função.
 
 
 
