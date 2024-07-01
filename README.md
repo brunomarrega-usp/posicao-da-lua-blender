@@ -12,44 +12,45 @@ O posLua é um add-on desenvolvido para o Blender, com o intuito de visualizar a
 - [NumPy](https://numpy.org/)
 - [Astropy](https://www.astropy.org/)
 
-#### Passo a passo
-- Instalando o `pip`: O ambiente Python do Blender não vem com o `pip` instalado por padrão, esse pacote permite a instalação dos módulos que precisamos para calcular os dados astronômicos.
+### Passo a passo
+#### Instalando o `pip`
+O ambiente Python do Blender não vem com o `pip` instalado por padrão, esse pacote permite a instalação dos módulos que precisamos para calcular os dados astronômicos.
 Para instalar o 'pip':
-  1. Encontre o caminho da pasta onde está o .exe do Python dentro da pasta de instalação do Blender.
+  1. Encontre o caminho da pasta onde está o `.exe` do Python dentro da pasta de instalação do Blender.
      Para o Windows, utilizando o Blender 4.1, o caminho para a pasta é:
-     '''
+     ```
      C:\Program Files\Blender Foundation\Blender 4.1\4.1\python\bin
-     '''
+     ```
   2. Abra o prompt de comando como administrador.
-     'Win + r' > digite 'cmd' > 'Ctrl + Shift + Enter'
+     `Win + r` > digite `cmd` > `Ctrl + Shift + Enter`
   3. Navegue para o diretório do Python dentro da pasta do Blender.
-     '''
+     ```
      cd "C:\Program Files\Blender Foundation\Blender 4.1\4.1\python\bin"
-     '''
-  4. Inicie o Python através do prompt de comando digitando 'python' e depois pressione 'Enter'.
-  5. Saia do Python, digitando 'exit()' e pressione 'Enter'.
-  6. Digite o comando 'python -m ensurepip' e pressione 'Enter' e aguarde a instalação do pacote 'pip' e suas dependências.
+     ```
+  4. Inicie o Python através do prompt de comando digitando `python` e depois pressione `Enter`.
+  5. Saia do Python, digitando `exit()` e pressione `Enter`.
+  6. Digite o comando `python -m ensurepip` e pressione `Enter` e aguarde a instalação do pacote `pip` e suas dependências.
      Mantenha o prompt de comando aberto para a instalação dos módulos, conforme os passos a seguir.
 
 - Instalando os módulos
-  Com o 'pip' instalado e o prompt de comando ainda aberto, podemos utilizá-lo para baixar os demais módulos necessários.
-  1. NumPy: 'pip -m pip install numpy'
-  2. Astropy: 'python -m pip install "astropy[all]"'
+  Com o `pip` instalado e o prompt de comando ainda aberto, podemos utilizá-lo para baixar os demais módulos necessários.
+  1. NumPy: `pip -m pip install numpy`
+  2. Astropy: `python -m pip install "astropy[all]"`
  
   Depois que os módulos forem baixados e instalados com sucesso, feche o prompt de comando.
 
 - Instalando o Add-on no Blender
-  1. Baixe o arquivo 'posLua.zip'.
+  1. Baixe o arquivo `posLua.zip`.
   2. Abra o Blender.
-  3. No menu superior, vá em 'Edit' > 'Preferences' > 'Add-ons'.
+  3. No menu superior, vá em `Edit` > `Preferences` > `Add-ons`.
      ![Blender Preferences > Add-ons](https://github.com/brunomarrega-usp/posicao-da-lua-blender/assets/165938265/05e6961d-a743-4a2c-b6f5-7de788886ddd)
-  4. Clique em 'Install' e selecione o arquivo '.zip'.
+  4. Clique em `Install` e selecione o arquivo `.zip`.
   5. Ative o add-on na lista de add-ons.
      ![Blender Preferences > Add-ons > Activate add-on](https://github.com/brunomarrega-usp/posicao-da-lua-blender/assets/165938265/f8057b0f-68c3-4e88-af73-04e9fa5050ed) 
   6. Pronto! O posLua foi instalado com sucesso e já pode ser utilizado dentro do Blender.
  
 ## Como usar
-O posLua funciona através de um painel lateral, encontrado no Viewport 3D principal, pressionando a tecla 'n'.
+O posLua funciona através de um painel lateral, encontrado no Viewport 3D principal, pressionando a tecla `n`.
 ![Sidebar > Posição da Lua](https://github.com/brunomarrega-usp/posicao-da-lua-blender/assets/165938265/96aec90d-db8d-4f2d-97db-40a174f82c5f)
 
 Através desse painel é possível:
