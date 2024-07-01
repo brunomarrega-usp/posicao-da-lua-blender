@@ -140,12 +140,78 @@ def limpar_cena():
 Para não sobrepor as cenas com objetos repetidos a cada iteração com o botão `Criar cena`, é configurada uma função que limpa todas as informações da cena atual. Essa função será chama sempre que uma nova cena é criada, antes de qualquer outra função.
 
 ### Operadores
-De acordo com a [documentação do Blender]([https://developer.blender.org/docs/](https://developer.blender.org/docs/features/interface/operators/)), operadores são classes que executam funções com funcionalidades adicionais e configurações de entrada. Se um atalho ou botão for pressionado, geralmente isso chama um operador. Por convenção: `CATEGORIA_OT_nome`.
+De acordo com a [documentação do Blender](https://developer.blender.org/docs/features/interface/operators/), operadores são classes que executam funções com funcionalidades adicionais e configurações de entrada. Se um atalho ou botão for pressionado, geralmente isso chama um operador. Por convenção: `CATEGORIA_OT_nome`.
 Para esse script, foram utulizados três operadores:
 - `MESH_OT_criar_lua` para criar a representação da Lua e posicioná-la em uma nova cena.
 - `RENDER_OT_hdri` para atribuir uma imagem HDR importada ao ambiente.
 - `VIEW_OT_toggle_grid` para alternar a vizibilidade do grid.
 
+#### `MESH_OT_criar_lua`
+```python
+class MESH_OT_criar_lua(bpy.types.Operator):
+    """
+    Cria uma nova cena simulando a posição da Lua no céu,
+    de acordo com o modulo Astropy.
+    """
+    
+    # ID do operador
+    bl_idname = "mesh.criar_lua" 
+    bl_label = "Defina o local e o momento, conforme os formatos indicados:"
+    
+    # Inputs de texto para o dialog box
+    str_tempo: bpy.props.StringProperty(name="Tempo:", default="2024-01-30 01:05")
+    str_local: bpy.props.StringProperty(name="Local:", default="Lorena, São Paulo, Brazil")
+    
+    
+    def execute(self, context):
+        # Deletar todos os objetos da cena
+        limpar_cena()
+        
+        # Cor de fundo
+        bpy.context.preferences.themes[0].view_3d.space.gradients.high_gradient = (0, 0, 0)
+        
+        # Resetar a posição do cursor 3D para a origem
+        bpy.context.scene.cursor.location = (0, 0, 0)
+        
+        # ----- Coordenadas ----- #
+        # Definir a data e localização para as coordenadas
+        tempo = self.str_tempo
+        cidade = self.str_local
+        
+        x, y, z = coordCartesianas_lua(cidade, tempo)
+        
+        # Cria uma esfera e atribui um nome a ela
+        bpy.ops.mesh.primitive_ico_sphere_add(enter_editmode=False, align='WORLD', location=(x, y, x), scale=(20, 20, 20))
+        lua = context.active_object
+        lua.name = "Lua"
+        
+        # ----- Material ----- #        
+        # Criar novo material
+        material_lua = bpy.data.materials.new(name="matLua")
+        material_lua.use_nodes = True
+        
+        # Criar shader de emissão de luz
+        bpy.data.materials["matLua"].node_tree.nodes["Principled BSDF"].inputs[27].default_value = 10
+        bpy.data.materials["matLua"].node_tree.nodes["Principled BSDF"].inputs[0].default_value = (0.52, 0.50, 0.67, 1)
+        
+        # Configurar renderizador
+        bpy.context.scene.render.engine = 'BLENDER_EEVEE'
+        
+        # Permitir a função bloom)
+        bpy.context.scene.eevee.use_bloom = True
+        
+        # Definir o tipo de shading
+        bpy.context.space_data.shading.type = 'RENDERED'
+        
+        # Atribuir material à "Lua"
+        lua.active_material = material_lua    
+
+        return {"FINISHED"}
+    
+    def invoke(self, context, event):
+        return context.window_manager.invoke_props_dialog(self)
+```
+Essa classe cria um operador que abre uma caixa de diálogo, pedindo duas `strings`, uma para o tempo e outra para o local, armazenadas, respectivamente em `self.str_tempo` e `self.str_local`
 
 
 
