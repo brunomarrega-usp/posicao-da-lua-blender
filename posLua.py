@@ -189,7 +189,7 @@ class RENDER_OT_hdri(bpy.types.Operator):
         return {'RUNNING_MODAL'}
 
 
-class RENDER_OT_toggle_grid(bpy.types.Operator):
+class VIEW_OT_toggle_grid(bpy.types.Operator):
     """Toggle para a malha de fundo"""
     bl_idname = "view.grid"
     bl_label = "Ver grid de fundo"
@@ -272,7 +272,7 @@ from bpy.utils import register_class, unregister_class
 _classes = [
     MESH_OT_criar_lua,
     RENDER_OT_hdri,
-    RENDER_OT_toggle_grid,
+    VIEW_OT_toggle_grid,
     VIEW3D_PT_posicaoLua
 ]
 
