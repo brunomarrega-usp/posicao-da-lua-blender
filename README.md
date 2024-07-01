@@ -74,7 +74,7 @@ No Viewport, abra a barra lateral pressionando `n` e entre na aba `Posição da 
 
 ## Como tudo funciona
 Para funcionar como um add-on dentro do Blender, a notação empregada foi a tradicionalmente utilizada para as classes de operadores e paineis, como é indicado na documentação do módulo `bpy`. O bloco inicial contém informações para registro do script, a versão mínima do Blender, autores e outras informações do add-on:
-```
+```python
 bl_info = {
     "name": "Posição da Lua",
     "author": "Bruno Marrega, Gabriela Bezerra, Kevin Akihito, Samara Amorin",
@@ -86,7 +86,7 @@ bl_info = {
 }
 ```
 ### Coordenadas cartesianas
-```
+```python
 def coordCartesianas_lua(cidade, tempo):
     # Localização do observador
     loc = apc.EarthLocation.of_address(cidade)
@@ -115,7 +115,7 @@ def coordCartesianas_lua(cidade, tempo):
 A função consulta a altitude e azimute através do módulo Astropy, e converte essas coordenadas para cartesianas, retornando o `x`, `y` e `z` para a Lua, para aquele momento, naquele lugar. Essa função será utilizada posteriormente dentro da classe que opera a função do botão `Criar cena`.
 
 ### Limpar cena
-```
+```python
 def limpar_cena():
     """Limpa todos os objetos e materiais da cena"""
     
