@@ -212,6 +212,9 @@ class MESH_OT_criar_lua(bpy.types.Operator):
         return context.window_manager.invoke_props_dialog(self)
 ```
 Essa classe cria um operador que abre uma caixa de diálogo quando invocado, pedindo dois _inputs_ em formato `string`, uma para o tempo e outra para o local, armazenadas, respectivamente em `self.str_tempo` e `self.str_local`. Essas variáveis são usadas como argumentos para chamar a função `coordCartesianas_lua` definida anteriormente, e que retorna três valores para posição, guardados nas variáveis locais `x`, `y` e `z`.
+
 Chamando a função `bpy.ops.mesh.primitive_ico_sphere_add`, própria da API do Blender, criamos uma nova Icoesfera, usando como argumento para sua posição as variáveis definidas acima. Depois, tornamos essa esfera o objeto ativo na cena em contexto e atribuímos a ela o nome `Lua`.
+
 Com o objeto ativo na cena, criamos um novo material chamado de `matLua`, amarrado à variável `material_lua`, e definimos alguns parâmetros basicos para seus _[shaders](https://en.wikipedia.org/wiki/Shader)_, um material de cor branca e emissão de luz.
+
 Para que essa emissão de luz possa ser vista em tempo real utilizando o _viewport_ do Blender, sem que haja a necessidade de renderizar a cena, definimos que o mecanismo de renderização será o Eevee com: `bpy.context.scene.render.engine = 'BLENDER_EEVEE'`, permitimos o uso do efeito _bloom_ e configuramos o tipo de vizualização do _viewport_ para `RENDERED`.
