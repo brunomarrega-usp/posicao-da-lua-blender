@@ -34,9 +34,9 @@ Para instalar o 'pip':
 
 #### Instalando os módulos
   Com o `pip` instalado e o prompt de comando ainda aberto, podemos utilizá-lo para baixar os demais módulos necessários.
-  1. NumPy: `pip -m pip install numpy`
+  1. NumPy: `python -m pip install numpy`
   2. Astropy: `python -m pip install "astropy[all]"`
- 
+
   Depois que os módulos forem baixados e instalados com sucesso, feche o prompt de comando.
 
 #### Instalando o Add-on no Blender
@@ -46,9 +46,9 @@ Para instalar o 'pip':
      ![Blender Preferences > Add-ons](https://github.com/brunomarrega-usp/posicao-da-lua-blender/assets/165938265/05e6961d-a743-4a2c-b6f5-7de788886ddd)
   4. Clique em `Install` e selecione o arquivo `.zip`.
   5. Ative o add-on na lista de add-ons.
-     ![Blender Preferences > Add-ons > Activate add-on](https://github.com/brunomarrega-usp/posicao-da-lua-blender/assets/165938265/f8057b0f-68c3-4e88-af73-04e9fa5050ed) 
+     ![Blender Preferences > Add-ons > Activate add-on](https://github.com/brunomarrega-usp/posicao-da-lua-blender/assets/165938265/f8057b0f-68c3-4e88-af73-04e9fa5050ed)
   6. Pronto! O posLua foi instalado com sucesso e já pode ser utilizado dentro do Blender.
- 
+
 ## Como usar
 O posLua funciona através de um painel lateral, encontrado no Viewport 3D principal, pressionando a tecla `n`.
 ![Sidebar > Posição da Lua](https://github.com/brunomarrega-usp/posicao-da-lua-blender/assets/165938265/96aec90d-db8d-4f2d-97db-40a174f82c5f)
@@ -93,13 +93,13 @@ def coordCartesianas_lua(cidade, tempo):
 
     # Tempo da observação
     t = apt.Time(tempo)
-              
+
     # AltAz frame (altitude e azimute) para o local e tempo definidos
     altaz_frame = apc.AltAz(obstime=t, location=loc)
 
     # Altitude e azimute da Lua
     altaz_lua = apc.get_body('moon', t, loc).transform_to(altaz_frame)
-              
+
     # Altitude (alt) é o ângulo de elevação a partir do horizonte
     # Azimute (az) é o ângulo medido em sentido horário a partir do norte
     alt = altaz_lua.alt.rad
@@ -109,7 +109,7 @@ def coordCartesianas_lua(cidade, tempo):
     x = np.cos(alt) * np.cos(az) * 1000
     y = np.cos(alt) * np.sin(az) * 1000
     z = np.sin(alt) * 1000
-         
+
     return x, y, z
 ```
 A função consulta a altitude e azimute através do módulo Astropy, e converte essas coordenadas para cartesianas, retornando o `x`, `y` e `z` para a Lua, para aquele momento, naquele lugar. Essa função será utilizada posteriormente dentro da classe que opera a função do botão `Criar cena`.
@@ -118,22 +118,22 @@ A função consulta a altitude e azimute através do módulo Astropy, e converte
 ```python
 def limpar_cena():
     """Limpa todos os objetos e materiais da cena"""
-    
+
     # Deleta todos os objetos dentro da cena
     bpy.ops.object.select_all(action='DESELECT')
     bpy.ops.object.select_all(action='SELECT')
     bpy.ops.object.delete()
-    
+
     # Acessa e deleta todos os materiais
     for material in bpy.data.materials:
         material.user_clear()
         bpy.data.materials.remove(material)
-    
+
     # Cria um novo mundo, caso nao exista
     if not bpy.data.worlds:
         bpy.data.worlds.new("World")
     world = bpy.data.worlds[0]
-        
+
     # Limpa todos os nodes existentes
     world.node_tree.nodes.clear()
 ```
@@ -153,66 +153,65 @@ class MESH_OT_criar_lua(bpy.types.Operator):
     Cria uma nova cena simulando a posição da Lua no céu,
     de acordo com o modulo Astropy.
     """
-    
+
     # ID do operador
-    bl_idname = "mesh.criar_lua" 
+    bl_idname = "mesh.criar_lua"
     bl_label = "Defina o local e o momento, conforme os formatos indicados:"
-    
+
     # Inputs de texto para o dialog box
     str_tempo: bpy.props.StringProperty(name="Tempo:", default="2024-01-30 01:05")
     str_local: bpy.props.StringProperty(name="Local:", default="Lorena, São Paulo, Brazil")
-    
-    
+
+
     def execute(self, context):
         # Deletar todos os objetos da cena
         limpar_cena()
-        
+
         # Cor de fundo
         bpy.context.preferences.themes[0].view_3d.space.gradients.high_gradient = (0, 0, 0)
-        
+
         # Resetar a posição do cursor 3D para a origem
         bpy.context.scene.cursor.location = (0, 0, 0)
-        
+
         # ----- Coordenadas ----- #
         # Definir a data e localização para as coordenadas
         tempo = self.str_tempo
         cidade = self.str_local
-        
+
         x, y, z = coordCartesianas_lua(cidade, tempo)
-        
+
         # Cria uma esfera e atribui um nome a ela
         bpy.ops.mesh.primitive_ico_sphere_add(enter_editmode=False, align='WORLD', location=(x, y, x), scale=(20, 20, 20))
         lua = context.active_object
         lua.name = "Lua"
-        
+
         # ----- Material ----- #        
         # Criar novo material
         material_lua = bpy.data.materials.new(name="matLua")
         material_lua.use_nodes = True
-        
+
         # Criar shader de emissão de luz
         bpy.data.materials["matLua"].node_tree.nodes["Principled BSDF"].inputs[27].default_value = 10
         bpy.data.materials["matLua"].node_tree.nodes["Principled BSDF"].inputs[0].default_value = (0.52, 0.50, 0.67, 1)
-        
+
         # Configurar renderizador
         bpy.context.scene.render.engine = 'BLENDER_EEVEE'
-        
+
         # Permitir a função bloom)
         bpy.context.scene.eevee.use_bloom = True
-        
+
         # Definir o tipo de shading
         bpy.context.space_data.shading.type = 'RENDERED'
-        
+
         # Atribuir material à "Lua"
         lua.active_material = material_lua    
 
         return {"FINISHED"}
-    
+
     def invoke(self, context, event):
         return context.window_manager.invoke_props_dialog(self)
 ```
-Essa classe cria um operador que abre uma caixa de diálogo, pedindo duas `strings`, uma para o tempo e outra para o local, armazenadas, respectivamente em `self.str_tempo` e `self.str_local`
-
-
-
-
+Essa classe cria um operador que abre uma caixa de diálogo quando invocado, pedindo dois _inputs_ em formato `string`, uma para o tempo e outra para o local, armazenadas, respectivamente em `self.str_tempo` e `self.str_local`. Essas variáveis são usadas como argumentos para chamar a função `coordCartesianas_lua` definida anteriormente, e que retorna três valores para posição, guardados nas variáveis locais `x`, `y` e `z`.
+Chamando a função `bpy.ops.mesh.primitive_ico_sphere_add`, própria da API do Blender, criamos uma nova Icoesfera, usando como argumento para sua posição as variáveis definidas acima. Depois, tornamos essa esfera o objeto ativo na cena em contexto e atribuímos a ela o nome `Lua`.
+Com o objeto ativo na cena, criamos um novo material chamado de `matLua`, amarrado à variável `material_lua`, e definimos alguns parâmetros basicos para seus _[shaders](https://en.wikipedia.org/wiki/Shader)_, um material de cor branca e emissão de luz.
+Para que essa emissão de luz possa ser vista em tempo real utilizando o _viewport_ do Blender, sem que haja a necessidade de renderizar a cena, definimos que o mecanismo de renderização será o Eevee com: `bpy.context.scene.render.engine = 'BLENDER_EEVEE'`, permitimos o uso do efeito _bloom_ e configuramos o tipo de vizualização do _viewport_ para `RENDERED`.
